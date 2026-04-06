@@ -50,3 +50,8 @@ python main.py image.png output.png 600 400 \
 ## Latex Report
 
 https://www.overleaf.com/read/hhshzgnkwxcv#8e5d3d
+
+## Videos:
+- Adam Rudko: [To be added]
+- Maksym 
+- Anton Deputat: [To be added]
