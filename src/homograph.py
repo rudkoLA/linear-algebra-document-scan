@@ -1,8 +1,6 @@
 import math
 import numpy as np
-from PIL import Image
-from transformations import apply_transformation_matrix
-
+from .transformations import apply_transformation_matrix
 
 def generate_dst_points(src_pts, width, height):
     center = np.mean(src_pts, axis=0)
@@ -125,28 +123,3 @@ def homography(img, input_points, width, height):
     return apply_transformation_matrix(
         img, h_final, interpolation="bilinear", dsize=(width, height)
     )
-
-
-if __name__ == "__main__":
-    input_points = np.array(
-        [
-            [271, 463],
-            [296, 372],
-            [318, 290],
-            [237, 268],
-            [157, 245],
-            [129, 323],
-            [98, 417],
-            [178, 439],
-        ]
-    )
-
-    input_points = sort_points(input_points)
-
-    out_w, out_h = 600, 400
-
-    img = np.array(Image.open("image.png"))
-
-    result_img = homography(img, input_points, out_w, out_h)
-
-    Image.fromarray(result_img).save("output.png")

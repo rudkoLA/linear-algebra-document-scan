@@ -1,5 +1,5 @@
 import numpy as np
-from utils import interpolate_nearest, interpolate_bilinear
+from .utils import interpolate_nearest, interpolate_bilinear
 
 
 def apply_transformation_matrix(
