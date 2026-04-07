@@ -53,5 +53,5 @@ https://www.overleaf.com/read/hhshzgnkwxcv#8e5d3d
 
 ## Videos:
 - Adam Rudko: [To be added]
-- Maksym Holovin: [To be added]
+- Maksym Holovin: https://www.youtube.com/watch?v=Dk2WuIS3InQ
 - Anton Deputat: https://youtu.be/zN5XqBQNmD8
