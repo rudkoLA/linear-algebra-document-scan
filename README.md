@@ -52,6 +52,6 @@ python main.py image.png output.png 600 400 \
 https://www.overleaf.com/read/hhshzgnkwxcv#8e5d3d
 
 ## Videos:
-- Adam Rudko: [To be added]
+- Adam Rudko: https://youtu.be/OskHgZnBTJY
 - Maksym Holovin: https://www.youtube.com/watch?v=Dk2WuIS3InQ
 - Anton Deputat: https://youtu.be/zN5XqBQNmD8
