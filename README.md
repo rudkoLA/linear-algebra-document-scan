@@ -55,3 +55,33 @@ https://www.overleaf.com/read/hhshzgnkwxcv#8e5d3d
 - Adam Rudko: https://youtu.be/OskHgZnBTJY
 - Maksym Holovin: https://www.youtube.com/watch?v=Dk2WuIS3InQ
 - Anton Deputat: https://youtu.be/zN5XqBQNmD8
+
+## Testing
+
+Run the complete automated suite:
+
+```bash
+pytest -q
+```
+
+The suite includes:
+
+- Unit tests for homography algebra (`H * H^-1`, null-space check `A h ~= 0`)
+- Pixel-level interpolation tests against hand-computed bilinear values
+- Visual regression tests versus OpenCV `warpPerspective` on benchmark document images
+- Robustness tests for degenerate point sets and extreme perspective cases
+
+## Section 7 Extensions (Investigation)
+
+Two extension paths are now prototyped in `src/extensions.py`:
+
+- SVD confidence metric `rho = sigma_8 / sigma_9`:
+  - `compute_svd_confidence_from_design_matrix(A)`
+  - `compute_svd_confidence_for_points(input_points, width, height)`
+
+- Automated corner detection using an edge-based pipeline:
+  - Gaussian blur -> Canny edges -> contour approximation -> quadrilateral selection
+  - `auto_detect_document_corners(image, ...)`
+  - `detect_and_warp_document(image, width, height, ...)`
+
+These are covered by tests in `tests/test_extensions.py`.
