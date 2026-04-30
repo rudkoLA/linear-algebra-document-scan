@@ -4,6 +4,7 @@ from .homograph import (
     compute_homography_matrix,
     homography,
     sort_points,
+    manual_svd_values,
     svd_confidence_metric,
 )
 
@@ -18,7 +19,7 @@ def compute_svd_confidence_from_design_matrix(A):
     if A.ndim != 2:
         raise ValueError(f"Design matrix must be 2D, got shape {A.shape}")
 
-    singular_values = np.linalg.svd(A, compute_uv=False)
+    singular_values = manual_svd_values(A)
     rho = svd_confidence_metric(singular_values)
     return rho, singular_values
 

@@ -69,6 +69,66 @@ def _min_quad_angle_degrees(quad):
 
     return float(min_angle)
 
+
+def manual_svd(matrix, *, tol=1e-12, max_sweeps=100):
+    """Compute singular values and right singular vectors with Jacobi rotations."""
+
+    matrix = np.asarray(matrix, dtype=np.float64)
+    if matrix.ndim != 2:
+        raise ValueError(f"SVD input must be a 2D array, got shape {matrix.shape}")
+
+    work = np.array(matrix, dtype=np.float64, copy=True)
+    _, n_cols = work.shape
+    right = np.eye(n_cols, dtype=np.float64)
+
+    for _ in range(max_sweeps):
+        max_ratio = 0.0
+
+        for p in range(n_cols - 1):
+            for q in range(p + 1, n_cols):
+                col_p = work[:, p]
+                col_q = work[:, q]
+
+                alpha = float(np.dot(col_p, col_p))
+                beta = float(np.dot(col_q, col_q))
+                gamma = float(np.dot(col_p, col_q))
+
+                pair_scale = math.sqrt(alpha * beta) if alpha > 0.0 and beta > 0.0 else 0.0
+                ratio = abs(gamma) / pair_scale if pair_scale > 0.0 else abs(gamma)
+                max_ratio = max(max_ratio, ratio)
+
+                if ratio <= tol:
+                    continue
+
+                phi = 0.5 * math.atan2(2.0 * gamma, beta - alpha)
+                c = math.cos(phi)
+                s = math.sin(phi)
+
+                old_p = col_p.copy()
+                old_q = col_q.copy()
+                work[:, p] = c * old_p - s * old_q
+                work[:, q] = s * old_p + c * old_q
+
+                right_p = right[:, p].copy()
+                right_q = right[:, q].copy()
+                right[:, p] = c * right_p - s * right_q
+                right[:, q] = s * right_p + c * right_q
+
+        if max_ratio <= tol:
+            break
+
+    singular_values = np.sqrt(np.sum(work * work, axis=0))
+    order = np.argsort(singular_values)[::-1]
+    singular_values = singular_values[order]
+    vh = right[:, order].T
+
+    return singular_values, vh
+
+
+def manual_svd_values(matrix, *, tol=1e-12, max_sweeps=100):
+    singular_values, _ = manual_svd(matrix, tol=tol, max_sweeps=max_sweeps)
+    return singular_values
+
 def generate_dst_points(src_pts, width, height):
     src_pts = _validate_point_set(src_pts, min_points=4)
 
@@ -236,7 +296,7 @@ def solve_normalized_dlt(src_points, dst_points):
 
     A = build_dlt_system(h_in_pts, h_out_pts)
 
-    _, singular_values, vh = np.linalg.svd(A)
+    singular_values, vh = manual_svd(A)
     h_vector = vh[-1, :]
     h_norm = h_vector.reshape(3, 3)
 
